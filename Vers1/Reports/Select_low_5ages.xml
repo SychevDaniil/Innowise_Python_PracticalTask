@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Report>
+  <Row>
+    <name>Room #661</name>
+    <avg_age>12</avg_age>
+  </Row>
+  <Row>
+    <name>Room #913</name>
+    <avg_age>20</avg_age>
+  </Row>
+  <Row>
+    <name>Room #111</name>
+    <avg_age>32</avg_age>
+  </Row>
+  <Row>
+    <name>Room #957</name>
+    <avg_age>34</avg_age>
+  </Row>
+  <Row>
+    <name>Room #773</name>
+    <avg_age>35</avg_age>
+  </Row>
+</Report>
