@@ -1,4 +1,3 @@
-from config import SCHEMA
 import psycopg
 
 class PostgresConnection():
@@ -23,16 +22,15 @@ class PostgresConnection():
     def commit(self): self.conn.commit()
 
 class Database():
-    def __init__(self, db_connection: PostgresConnection, schem_name = SCHEMA):
-        self.schem_name = schem_name
+    def __init__(self, db_connection: PostgresConnection):
         self.conn = db_connection
 
-    def create_schem(self,):
-        self.conn.execute(f"""CREATE SCHEMA IF NOT EXISTS {self.schem_name};""")
+    def create_schem(self):
+        self.conn.execute("""CREATE SCHEMA IF NOT EXISTS Inowise;""")
         self.conn.commit()
 
     def create_stud_table(self):
-        self.conn.execute(f"""CREATE TABLE IF NOT EXISTS {self.schem_name}.students (
+        self.conn.execute("""CREATE TABLE IF NOT EXISTS Inowise.students (
         students_id SERIAL PRIMARY KEY,
         name VARCHAR(50),
         birthday DATE,
@@ -40,22 +38,22 @@ class Database():
         room_id INT,
         CONSTRAINT fk_room
         FOREIGN KEY (room_id)
-        REFERENCES {self.schem_name}.rooms(rooms_id)
+        REFERENCES Inowise.rooms(rooms_id)
         ON DELETE SET NULL );
         """)
         self.conn.commit()
 
     def create_rooms_table(self):
-        self.conn.execute(f"""
-        CREATE TABLE IF NOT EXISTS {self.schem_name}.rooms (
+        self.conn.execute("""
+        CREATE TABLE IF NOT EXISTS Inowise.rooms (
         rooms_id SERIAL PRIMARY KEY,
         name VARCHAR(50)    );
         """)
         self.conn.commit()
 
     def insert_stud_table(self, students):
-        sql = f"""
-            INSERT INTO {self.schem_name}.students (students_id, name, sex, birthday, room_id)
+        sql = """
+            INSERT INTO Inowise.students (students_id, name, sex, birthday, room_id)
             VALUES (%s, %s, %s, %s, %s)
             ON CONFLICT (students_id) DO NOTHING;
         """
@@ -67,8 +65,8 @@ class Database():
         self.conn.commit()
 
     def insert_rooms_table(self, rooms):
-        sql = f"""
-            INSERT INTO {self.schem_name}.rooms (rooms_id, name)
+        sql = """
+            INSERT INTO Inowise.rooms (rooms_id, name)
             VALUES (%s, %s)
             ON CONFLICT (rooms_id) DO NOTHING;
         """
