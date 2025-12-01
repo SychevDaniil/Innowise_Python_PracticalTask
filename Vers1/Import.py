@@ -1,9 +1,10 @@
 import wget
 import logging
 import os
+from config import DATA_DIR
 
 class Loader:
-    def __init__(self, data_dir="Data"):
+    def __init__(self, data_dir=DATA_DIR):
         self.data_dir = data_dir
         os.makedirs(self.data_dir, exist_ok=True)
 
@@ -29,11 +30,11 @@ class Loader:
 
         match index:
             case 1:
-                file_name = 'students.json'
+                file_name = 'students.json' # https://drive.google.com/uc?export=download&id=16dON1nws6h9g1S1SVRh8nXvmv0wHTIJf
                 url = self.get_url()
                 return self.download_file(url, file_name)
             case 2:
-                file_name = 'rooms.json'
+                file_name = 'rooms.json'  # https://drive.google.com/uc?export=download&id=1Qlsyeg0ndPC2DcYFFaH3epKEKwH74Fbj
                 url = self.get_url()
                 return self.download_file(url, file_name)
             case _:
