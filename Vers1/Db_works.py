@@ -56,13 +56,14 @@ class Database:
                 ON CONFLICT (students_id) DO NOTHING;
             """
             rows = [
-                (s["id"], s["name"], s["sex"], s["birthday"], s["room"])
+                (s["students_id"], s["name"], s["sex"], s["birthday"], s["room_id"])
                 for s in students
             ]
             self.conn.executemany(sql, rows)
             self.conn.commit()
+            logging.info(f'Добавление данных в таблицу Students прошло успешно')
         except Exception as e:
-            logging.warning(f'Добавление данных в таблицу Student прошло успешно')
+            logging.warning(f'Ошибка при добавлении данных в таблицу Students: {e}')
             return None
 
     def insert_rooms_table(self, rooms):
@@ -73,12 +74,12 @@ class Database:
                 ON CONFLICT (rooms_id) DO NOTHING;
             """
             rows = [
-                (room["id"], room["name"])
+                (room["rooms_id"], room["name"])
                 for room in rooms
             ]
             self.conn.executemany(sql, rows)
             self.conn.commit()
-            logging.warning(f'Добавление данных в таблицу Rooms прошло успешно')
+            logging.info(f'Добавление данных в таблицу Rooms прошло успешно')
         except Exception as e:
             logging.warning(f'Ошибка при добавлении данных в таблицу Rooms: {e}')
             return None
@@ -97,6 +98,7 @@ class Database:
             self.conn.execute("CREATE INDEX IF NOT EXISTS idx_students_birth ON students(birthday);")
             self.conn.execute("CREATE INDEX IF NOT EXISTS idx_students_sex ON students(sex);")
             self.conn.commit()
+            logging.info(f'Индексы таблицы Students успешно созданы')
         except Exception as e:
             logging.warning(f'Ошибка при создании индексов в Students: {e}')
             return None
@@ -106,6 +108,7 @@ class Database:
             self.conn.execute("CREATE INDEX IF NOT EXISTS idx_rooms_id ON rooms(rooms_id);")
             self.conn.execute("CREATE INDEX IF NOT EXISTS idx_rooms_name ON rooms(name);")
             self.conn.commit()
+            logging.info(f'Индексы таблицы Rooms успешно созданы')
         except Exception as e:
             logging.warning(f'Ошибка при создании индексов в Rooms: {e}')
             return None

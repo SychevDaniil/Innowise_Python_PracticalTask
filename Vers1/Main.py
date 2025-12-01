@@ -10,7 +10,10 @@ from config import DATA_DIR, OUTPUT_DIR, DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_
 
 
 def main():
+    logging.basicConfig(level=logging.INFO, filename="py_log.log", filemode="w",
+                        format="%(asctime)s %(levelname)s %(message)s")
 
+    logging.info("Программа запущена")
     # загрузка json и парсинг
     loader = Import.Loader()
     """loader.import_files()
@@ -24,16 +27,19 @@ def main():
     # Создание БД
     data_base = Db_works.Database(db_conn, SCHEMA)
     data_base.create_schem()
-    data_base.create_stud_table()
     data_base.create_rooms_table()
+    data_base.create_stud_table()
 
-    data_base.insert_stud_table(students)
     data_base.insert_rooms_table(rooms)
+    data_base.insert_stud_table(students)
 
-    sel1 = data_base.select_queries(QUERIES[1])
+    sel1 = data_base.select_queries(QUERIES["Select_count_rooms"])
 
-    rep = Report.Report()
+    rep = Report.Report(OUTPUT_DIR)
     rep.export(sel1, "Report1", "xml")
+
+    logging.info("Программа прекратила работу")
+
 
 if __name__ == "__main__":
     main()

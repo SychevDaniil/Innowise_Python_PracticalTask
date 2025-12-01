@@ -20,7 +20,8 @@ class PostgresConnection:
             with self.conn.cursor() as cur:
                 cur.execute(sql, params or ())
                 cols = [d.name for d in cur.description]
-            return [dict(zip(cols, r)) for r in cur.fetchall()]
+                rows = cur.fetchall()  # нужно вызвать здесь, пока курсор открыт
+            return [dict(zip(cols, r)) for r in rows]
         except Exception as e:
             logging.warning(f'Ошибка при выполнении запроса {sql}: {e}')
             return None

@@ -6,13 +6,13 @@ import xml.etree.ElementTree as ET
 
 
 class Report:
-    def __init__(self, out_dir = OUTPUT_DIR):
-        self.data_dir = out_dir
-        os.makedirs(self.data_dir, exist_ok=True)
+    def __init__(self, output_dir: OUTPUT_DIR):
+        self.output_dir = output_dir
+        os.makedirs(self.output_dir, exist_ok=True)
 
     def export_json(self, data, report_name):
         try:
-            with open(self.data_dir / f"{report_name}.json", "w", encoding="utf-8") as f:
+            with open(self.output_dir / f"{report_name}.json", "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=4)
         except Exception as e:
             logging.warning(f'Ошибка при создании {report_name}: {e}')
