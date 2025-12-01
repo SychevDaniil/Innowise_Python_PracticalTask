@@ -8,6 +8,8 @@ DB_USER = os.getenv("DB_USER", "postgres")
 DB_PASS = os.getenv("DB_PASS", "AsSQLol")
 DB_NAME = os.getenv("DB_NAME", "postgres")
 
+File_name_rooms = "rooms.json"
+File_name_stud = "students.json"
 SCHEMA = "Innowise"
 DATA_DIR = Path("Data")
 OUTPUT_DIR = Path("Reports")

@@ -1,7 +1,8 @@
 import wget
+import json
 import logging
 import os
-from config import DATA_DIR
+from config import DATA_DIR, File_name_rooms, File_name_stud
 
 class Loader:
     def __init__(self, data_dir=DATA_DIR):
@@ -30,13 +31,23 @@ class Loader:
 
         match index:
             case 1:
-                file_name = 'students.json' # https://drive.google.com/uc?export=download&id=16dON1nws6h9g1S1SVRh8nXvmv0wHTIJf
                 url = self.get_url()
-                return self.download_file(url, file_name)
+                return self.download_file(url,File_name_stud) # https://drive.google.com/uc?export=download&id=16dON1nws6h9g1S1SVRh8nXvmv0wHTIJf
             case 2:
-                file_name = 'rooms.json'  # https://drive.google.com/uc?export=download&id=1Qlsyeg0ndPC2DcYFFaH3epKEKwH74Fbj
                 url = self.get_url()
-                return self.download_file(url, file_name)
+                return self.download_file(url, File_name_rooms) # https://drive.google.com/uc?export=download&id=1Qlsyeg0ndPC2DcYFFaH3epKEKwH74Fbj
             case _:
                 logging.warning("Неверный выбор")
                 return None
+
+    def load_stud_json(self, dir: DATA_DIR, file_name: File_name_stud):
+        with open(dir / file_name, encoding="utf-8") as f:
+            data = json.load(f)
+        return [{"students_id": int(r["id"]), "name": r["name"],
+                 "birthday": r["birthday"], "sex": r["sex"],
+                 "room_id": int(r["room"])} for r in data]
+
+    def load_rooms_json(self, dir: DATA_DIR, file_name: File_name_rooms):
+        with open(dir / file_name, encoding="utf-8") as f:
+            data = json.load(f)
+        return [{"rooms_id": int(r["id"]), "name": r["name"]} for r in data]

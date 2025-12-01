@@ -1,30 +1,9 @@
 from config import SCHEMA
-import psycopg
 import logging
+from Db_connection import PostgresConnection
 
-class PostgresConnection :
-    def __init__(self, host, port, user, password, db):
-        self.conn = psycopg.connect(host=host, port=port, user=user, password=password, dbname=db)
-
-    def execute(self, sql, params=None, many=False):
-        with self.conn.cursor() as cur:
-            cur.execute(sql, params or ())
-        return True
-
-    def executemany(self, sql, rows):
-        with self.conn.cursor() as cur:
-            cur.executemany(sql, rows)
-
-    def query(self, sql, params=None):
-        with self.conn.cursor() as cur:
-            cur.execute(sql, params or ())
-            cols = [d.name for d in cur.description]
-            return [dict(zip(cols, r)) for r in cur.fetchall()]
-
-    def commit(self): self.conn.commit()
-
-class Database :
-    def __init__(self, db_connection: PostgresConnection, schem_name = SCHEMA):
+class Database:
+    def __init__(self, db_connection: PostgresConnection, schem_name=SCHEMA):
         self.schem_name = schem_name
         self.conn = db_connection
 
@@ -51,8 +30,9 @@ class Database :
             ON DELETE SET NULL );
             """)
             self.conn.commit()
+            logging.info(f'Таблица Students создана успешно')
         except Exception as e:
-            logging.warning(f'Ошибка при создании {self.schem_name}: {e}')
+            logging.warning(f'Ошибка при создании таблицы Student: {e}')
             return None
 
     def create_rooms_table(self):
@@ -63,8 +43,9 @@ class Database :
             name VARCHAR(50)    );
             """)
             self.conn.commit()
+            logging.info(f'Таблица Rooms создана успешно')
         except Exception as e:
-            logging.warning(f'Ошибка при создании {self.schem_name}: {e}')
+            logging.warning(f'Ошибка при создании таблицы Rooms: {e}')
             return None
 
     def insert_stud_table(self, students):
@@ -81,8 +62,9 @@ class Database :
             self.conn.executemany(sql, rows)
             self.conn.commit()
         except Exception as e:
-            logging.warning(f'Ошибка при создании {self.schem_name}: {e}')
+            logging.warning(f'Добавление данных в таблицу Student прошло успешно')
             return None
+
     def insert_rooms_table(self, rooms):
         try:
             sql = f"""
@@ -96,8 +78,9 @@ class Database :
             ]
             self.conn.executemany(sql, rows)
             self.conn.commit()
+            logging.warning(f'Добавление данных в таблицу Rooms прошло успешно')
         except Exception as e:
-            logging.warning(f'Ошибка при создании {self.schem_name}: {e}')
+            logging.warning(f'Ошибка при добавлении данных в таблицу Rooms: {e}')
             return None
 
     def select_queries(self, sel_query):
@@ -108,13 +91,13 @@ class Database :
             return None
 
     def create_stud_index(self, students):
-         try:
+        try:
             self.conn.execute("CREATE INDEX IF NOT EXISTS idx_students_id ON students(students_id);")
             self.conn.execute("CREATE INDEX IF NOT EXISTS idx_students_room ON students(room_id);")
             self.conn.execute("CREATE INDEX IF NOT EXISTS idx_students_birth ON students(birthday);")
             self.conn.execute("CREATE INDEX IF NOT EXISTS idx_students_sex ON students(sex);")
             self.conn.commit()
-         except Exception as e:
+        except Exception as e:
             logging.warning(f'Ошибка при создании индексов в Students: {e}')
             return None
 
