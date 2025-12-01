@@ -50,14 +50,6 @@ def insert_students(conn, students):
             ))
     conn.commit()
 
-def Select_queries_json(conn , sel_query ):
-        with conn.cursor() as cur:
-            cur.execute(sel_query)
-            rows = cur.fetchall()
-            description = cur.description
-        return {"rows": rows, "description": description}
-
-
 def Select_queries(conn, sel_query):
     with conn.cursor() as cur:
         cur.execute(sel_query)
