@@ -8,7 +8,6 @@ import Report
 from config import DATA_DIR, OUTPUT_DIR, DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME, SCHEMA, File_name_stud, File_name_rooms, QUERIES
 
 
-
 def main():
     logging.basicConfig(level=logging.INFO, filename="py_log.log", filemode="w",
                         format="%(asctime)s %(levelname)s %(message)s")
